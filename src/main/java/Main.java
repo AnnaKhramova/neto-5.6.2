@@ -5,11 +5,18 @@ import com.opencsv.CSVReader;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
+import org.w3c.dom.*;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
@@ -20,6 +27,11 @@ public class Main {
         String json = listToJson(list);
         String jsonFileName = "data.json";
         writeString(json, jsonFileName);
+
+        List<Employee> list2 = parseXML("data.xml");
+        String json2 = listToJson(list2);
+        String jsonFileName2 = "data2.json";
+        writeString(json2, jsonFileName2);
     }
 
     private static List<Employee> parseCSV(String[] columnMapping, String fileName) {
@@ -37,6 +49,38 @@ public class Main {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private static List<Employee> parseXML(String fileName) {
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.parse(new File(fileName));
+            Node root = doc.getDocumentElement();
+            List<Employee> employees = new ArrayList<>();
+            read(employees, root);
+            return employees;
+        } catch (IOException | SAXException | ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static void read(List<Employee> employees, Node node) {
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node_ = nodeList.item(i);
+            if (Node.ELEMENT_NODE == node_.getNodeType()) {
+                Element element = (Element) node_;
+                Employee employee = new Employee();
+                employee.id = Long.parseLong(element.getElementsByTagName("id").item(0).getTextContent());
+                employee.firstName = element.getElementsByTagName("firstName").item(0).getTextContent();
+                employee.lastName = element.getElementsByTagName("lastName").item(0).getTextContent();
+                employee.country = element.getElementsByTagName("country").item(0).getTextContent();
+                employee.age = Integer.parseInt(element.getElementsByTagName("age").item(0).getTextContent());
+                employees.add(employee);
+            }
+        }
     }
 
     private static <T> String listToJson(List<T> list) {
