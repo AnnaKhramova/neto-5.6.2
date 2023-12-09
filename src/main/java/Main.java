@@ -5,16 +5,16 @@ import com.opencsv.CSVReader;
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +32,12 @@ public class Main {
         String json2 = listToJson(list2);
         String jsonFileName2 = "data2.json";
         writeString(json2, jsonFileName2);
+
+        String json3 = readString("new_data.json");
+        List<Employee> list3 = jsonToList(json3);
+        for (Employee e : list3) {
+            System.out.println(e);
+        }
     }
 
     private static List<Employee> parseCSV(String[] columnMapping, String fileName) {
@@ -98,6 +104,39 @@ public class Main {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static String readString(String fileName) {
+        try (BufferedReader reader =
+                     new BufferedReader(new FileReader(fileName))) {
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+            return sb.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static List<Employee> jsonToList(String jsonText) {
+        List<Employee> employees = new ArrayList<>();
+        JSONParser parser = new JSONParser();
+        try {
+            JSONArray jsonArray = (JSONArray) parser.parse(jsonText);
+            GsonBuilder builder = new GsonBuilder();
+            Gson gson = builder.create();
+            for (Object jsonObject : jsonArray) {
+                Employee employee = gson.fromJson(jsonObject.toString(), Employee.class);
+                employees.add(employee);
+            }
+            return employees;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }
