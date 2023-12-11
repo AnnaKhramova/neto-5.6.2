@@ -1,3 +1,5 @@
+package ru.akhramova;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -89,7 +91,7 @@ public class Main {
         }
     }
 
-    private static <T> String listToJson(List<T> list) {
+    public static <T> String listToJson(List<T> list) {
         Type listType = new TypeToken<List<T>>() {}.getType();
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
@@ -106,7 +108,7 @@ public class Main {
         }
     }
 
-    private static String readString(String fileName) {
+    public static String readString(String fileName) {
         try (BufferedReader reader =
                      new BufferedReader(new FileReader(fileName))) {
             StringBuilder sb = new StringBuilder();
@@ -121,7 +123,7 @@ public class Main {
         return null;
     }
 
-    private static List<Employee> jsonToList(String jsonText) {
+    public static List<Employee> jsonToList(String jsonText) {
         List<Employee> employees = new ArrayList<>();
         JSONParser parser = new JSONParser();
         try {
