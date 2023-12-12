@@ -7,7 +7,7 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
+import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -59,19 +59,20 @@ class MainTest {
         assertThat(actual.get(1).firstName, equalTo("Ivan"));
     }
 
-    // Почему-то не работает :(
-    // Выдает ошибку
-    // java.lang.NoSuchMethodError: 'void org.hamcrest.Matcher.describeMismatch(java.lang.Object, org.hamcrest.Description)'
-//    @Test
-//    void hasPropertyTest() {
-//        //given
-//        String json = "[  {    \"id\": 1,    \"firstName\": \"John\",    \"lastName\": \"Smith\",    \"country\": \"USA\",    \"age\": 25  },  {    \"id\": 2,    \"firstName\": \"Ivan\",    \"lastName\": \"Petrov\",    \"country\": \"RU\",    \"age\": 23  }]";
-//        //when
-//        List<Employee> actual = Main.jsonToList(json);
-//        Employee employee = actual.get(0);
-//        //then
-//        assertThat(employee, hasProperty("lastName", equalTo("Smith")));
-//    }
+    // Теперь говорит что нет такого свойства
+    // java.lang.AssertionError:
+    // Expected: hasProperty("lastName", "Smith")
+    //     but: No property "lastName"
+    @Test
+    void hasPropertyTest() {
+        //given
+        String json = "[  {    \"id\": 1,    \"firstName\": \"John\",    \"lastName\": \"Smith\",    \"country\": \"USA\",    \"age\": 25  },  {    \"id\": 2,    \"firstName\": \"Ivan\",    \"lastName\": \"Petrov\",    \"country\": \"RU\",    \"age\": 23  }]";
+        //when
+        List<Employee> actual = Main.jsonToList(json);
+        Employee employee = actual.get(0);
+        //then
+        assertThat(employee, hasProperty("lastName", equalTo("Smith")));
+    }
 
     @Test
     void compareAgeTest() {
