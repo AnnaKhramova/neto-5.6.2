@@ -81,11 +81,11 @@ public class Main {
             if (Node.ELEMENT_NODE == node_.getNodeType()) {
                 Element element = (Element) node_;
                 Employee employee = new Employee();
-                employee.id = Long.parseLong(element.getElementsByTagName("id").item(0).getTextContent());
-                employee.firstName = element.getElementsByTagName("firstName").item(0).getTextContent();
-                employee.lastName = element.getElementsByTagName("lastName").item(0).getTextContent();
-                employee.country = element.getElementsByTagName("country").item(0).getTextContent();
-                employee.age = Integer.parseInt(element.getElementsByTagName("age").item(0).getTextContent());
+                employee.setId(Long.parseLong(element.getElementsByTagName("id").item(0).getTextContent()));
+                employee.setFirstName(element.getElementsByTagName("firstName").item(0).getTextContent());
+                employee.setLastName(element.getElementsByTagName("lastName").item(0).getTextContent());
+                employee.setCountry(element.getElementsByTagName("country").item(0).getTextContent());
+                employee.setAge(Integer.parseInt(element.getElementsByTagName("age").item(0).getTextContent()));
                 employees.add(employee);
             }
         }

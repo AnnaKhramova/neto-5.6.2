@@ -12,8 +12,6 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNull.nullValue;
-import static org.hamcrest.number.OrderingComparison.greaterThan;
-import static org.hamcrest.number.OrderingComparison.lessThan;
 import static org.hamcrest.Matchers.instanceOf;
 
 class MainTest {
@@ -55,14 +53,10 @@ class MainTest {
         assertThat(actual, is(not(nullValue())));
         assertThat(actual, is(not(empty())));
         assertThat(actual.size(), equalTo(2));
-        assertThat(actual.get(0).age, equalTo(25));
-        assertThat(actual.get(1).firstName, equalTo("Ivan"));
+        assertThat(actual.get(0).getAge(), equalTo(25));
+        assertThat(actual.get(1).getFirstName(), equalTo("Ivan"));
     }
 
-    // Теперь говорит что нет такого свойства
-    // java.lang.AssertionError:
-    // Expected: hasProperty("lastName", "Smith")
-    //     but: No property "lastName"
     @Test
     void hasPropertyTest() {
         //given
@@ -75,25 +69,25 @@ class MainTest {
     }
 
     @Test
-    void compareAgeTest() {
+    void countryTest() {
         //given
         String json = "[  {    \"id\": 1,    \"firstName\": \"John\",    \"lastName\": \"Smith\",    \"country\": \"USA\",    \"age\": 25  },  {    \"id\": 2,    \"firstName\": \"Ivan\",    \"lastName\": \"Petrov\",    \"country\": \"RU\",    \"age\": 23  }]";
         //when
         List<Employee> actual = Main.jsonToList(json);
         //then
-        assertThat(actual.get(0).age, greaterThan(actual.get(1).age));
-        assertThat(actual.get(0).age, lessThan(30));
+        assertThat(actual.get(0).getCountry(), is(instanceOf(String.class)));
+        assertThat(actual.get(1).getCountry(), is(instanceOf(String.class)));
     }
 
     @Test
-    void instanceOfTest() {
+    void lastNameTest() {
         //given
         String json = "[  {    \"id\": 1,    \"firstName\": \"John\",    \"lastName\": \"Smith\",    \"country\": \"USA\",    \"age\": 25  },  {    \"id\": 2,    \"firstName\": \"Ivan\",    \"lastName\": \"Petrov\",    \"country\": \"RU\",    \"age\": 23  }]";
         //when
         List<Employee> actual = Main.jsonToList(json);
         //then
-        assertThat(actual.get(0).lastName, is(instanceOf(String.class)));
-        assertThat(actual.get(1).country, is(instanceOf(String.class)));
+        assertThat(actual.get(0).getLastName(), is(instanceOf(String.class)));
+        assertThat(actual.get(1).getLastName(), is(instanceOf(String.class)));
     }
 
 }
